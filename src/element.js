@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { setAttribute } from './lib/utils';
 class Element {
   constructor(tagName, props, children) {
     if (!_.isArray(children) && children != null) {
@@ -24,6 +25,22 @@ class Element {
       count++;
     });
     this.count = count;
+  }
+  render() {
+    const el = document.createElement(this.tagName);
+    const props = this.props;
+    for(var propName in props) {
+      if(props.hasOwnProperty(propName)) {
+        setAttribute(el, propName, props[propName]);
+      }
+    }
+    _.each(this.children, (child) => {
+      const childElement = (child instanceof Element) ?
+        child.render() : document.createTextNode(child);
+      el.appendChild(childElement);
+    });
+
+    return el;
   }
 }
 
