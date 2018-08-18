@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { setAttribute } from './lib/utils';
+import { VIRTUAL_DOM_TYPE } from './lib/VIrtualDomSymbols';
 class Element {
   constructor(tagName, props, children) {
     if (!_.isArray(children) && children != null) {
@@ -14,6 +15,7 @@ class Element {
     this.props = props || {};
     this.children = children || [];
     this.key = props ? props.key : void 0;
+    this.$$type = VIRTUAL_DOM_TYPE;
 
     let count = 0;
     _.each(this.children, (child, i) => {
@@ -44,8 +46,18 @@ class Element {
   }
 }
 
-function createElement(tagName, props, children) {
+export function createElement(tagName, props, children) {
   return new Element(tagName, props, children);
 }
-
-export default createElement;
+/**
+ * 
+ * @param {?object} object
+ * @return {boolean} True if 'object' is a valid component 
+ */
+export function isValidElement(object) {
+  return (
+    typeof object === 'object' &&
+    object !== null &&
+    object.$$type === VIRTUAL_DOM_TYPE
+  );
+}
