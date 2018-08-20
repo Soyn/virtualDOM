@@ -4,7 +4,7 @@
  * https://github.com/Matt-Esch/virtual-dom/blob/master/vtree/diff.js
  */
 import { REMOVE_ELEMENT, INSERT_ELEMENT} from './VIrtualDomSymbols'
-function diff(oldList, newList, key) {
+function listDiff(oldList, newList, key) {
   const oldMap = makeKeyIndexAndFree(oldList, key);
   const newMap = makeKeyIndexAndFree(newList, key);
 
@@ -124,3 +124,4 @@ function getItemKey(item, key) {
       : key[item]
   );
 }
+export default listDiff;
