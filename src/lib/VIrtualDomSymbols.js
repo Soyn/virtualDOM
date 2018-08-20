@@ -9,3 +9,23 @@ export const REMOVE_ELEMENT = hasSymbol
 export const INSERT_ELEMENT = hasSymbol
   ? Symbol.for('virtualDom.insert')
   : 0x0003;
+
+const REPLACE = hasSymbol
+  ? Symbol.for('virtualDom.replace')
+  : 0x0004;
+const REORDER = hasSymbol
+  ? Symbol.for('virtualDom.reorder')
+  : 0x0005;
+const PROPS = hasSymbol
+  ? Symbol.for('virtualDom.props')
+  : 0x0006;
+const TEXT = hasSymbol
+  ? Symbol.for('virtualDom.text')
+  : 0x0007;
+
+export const moveAction = {
+  REPLACE,
+  REORDER,
+  PROPS,
+  TEXT,
+};
