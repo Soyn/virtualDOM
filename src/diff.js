@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { moveAction } from './lib/VIrtualDomSymbols';
 import listDiff from './lib/listDiff';
-function diffOnNode(oldNode, newNode) {
-}
 function diffProps(oldNode, newNode) {
   let count = 0;
   const oldProps = oldNode.props;
@@ -31,6 +29,9 @@ function diffProps(oldNode, newNode) {
   }
   return propsPatches;
 }
+function isIgnoreChildren(node) {
+  return (node.props && node.props.hasOwnProperty('ignore'));
+}
 function dfsWalk(oldNode, newNode, index, patches) {
   let actualOldNode = _.isArray(oldNode) ? oldNode[index] : oldNode;
   let actualNewNode = _.isArray(newNode) ? newNode[index] : newNode;
@@ -44,19 +45,54 @@ function dfsWalk(oldNode, newNode, index, patches) {
         type: moveAction.TEXT,
         content: newNode
       });
-    } else {
+    } else if(
+      actualNewNode.tagName === actualOldNode.tagName &&
+      actualNewNode.key === actualOldNode.key
+    ){
       const propsPathch = diffProps(actualOldNode, actualNewNode);
+      if (propsPathch) {
+        currentPatch.push({
+          type: moveAction.PROPS,
+          content: newNode
+        });
+      }
+      if (!isIgnoreChildren(newNode)) {
+        diffChildren(
+          actualOldNode.children,
+          actualNewNode.children,
+          index,
+          patches,
+          currentPatch
+        )
+      }
+    } else {
+      currentPatch.push({
+        type: moveAction.REPLACE,
+        node: newNode,
+      })
+    }
+    if (currentPatch.length) {
+      patches[index] = currentPatch;
     }
   }
-  patches[index] = diffOnNode(actualOldNode, actualNewNode);
-  diffChildren(actualOldNode.children, actualNewNode.children, index, patches);
 }
 
-function diffChildren(oldChildren, newChildren, index, patches) {
+function diffChildren(oldChildren, newChildren, index, patches, currentPatch) {
+  let diffs = listDiff(oldChildren, newChildren, 'key');
+  newChildren = diffs.children;
+  if (diffs.moves.length) {
+    const reorderPatch = {
+      type: moveAction.REORDER,
+      moves: diffs.moves,
+    };
+    currentPatch.push(reorderPatch);
+  }
+
   let leftNode = null;
   let currentNodeIndex = index;
-  oldChildren.forEach((child, i) => {
-    let newChild = newChildren[i];
+
+  _.each(oldChildren, (child, i) => {
+    const newChild = newChildren[i];
     currentNodeIndex = (leftNode && leftNode.count)
       ? currentNodeIndex + leftNode.count + 1
       : currentNodeIndex + 1;
@@ -75,3 +111,5 @@ export function diff(oldTree, newTree) {
   dfsWalk(oldTree, newTree, index, patches);
   return patches;
 }
+
+export default diff;
