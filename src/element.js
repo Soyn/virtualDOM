@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { setAttribute } from './lib/utils';
-import { VIRTUAL_DOM_TYPE } from './lib/VIrtualDomSymbols';
+import { VIRTUAL_DOM_TYPE } from './lib/VirtualDomSymbols';
 class Element {
   constructor(tagName, props, children) {
     if (!_.isArray(children) && children != null) {

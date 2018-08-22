@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { setAttribute } from './utils';
-import { moveAction, REMOVE_ELEMENT, INSERT_ELEMENT } from './VIrtualDomSymbols';
+import { moveAction, REMOVE_ELEMENT, INSERT_ELEMENT } from './VirtualDomSymbols';
 
 function reorderChildren(node, moves) {
   const staticNodeList = _.toArray(node.childNodes);

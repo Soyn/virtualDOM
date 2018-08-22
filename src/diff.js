@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { moveAction } from './lib/VIrtualDomSymbols';
+import { moveAction } from './lib/VirtualDomSymbols';
 import listDiff from './lib/listDiff';
 function diffProps(oldNode, newNode) {
   let count = 0;
