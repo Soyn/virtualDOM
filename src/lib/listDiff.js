@@ -48,12 +48,11 @@ function listDiff(oldList, newList, key) {
     }
   }
   const moves = [];
-  const simulateList = [];
-  for(i = 0; i < children.length; i++) {
-    if(children[i] === null) {
+  const simulateList = children.slice(0);
+  for(i = 0; i < simulateList.length; i++) {
+    if(simulateList[i] === null) {
       remove(i);
-    } else {
-      simulateList.push(children[i]);
+      removeSimulate(i)
     }
   }
   for (i = 0; i < newList.length; i++) {
