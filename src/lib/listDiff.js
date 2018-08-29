@@ -122,7 +122,7 @@ function getItemKey(item, key) {
   return (
     typeof key === 'string'
       ? item[key]
-      : key[item]
+      : key(item)
   );
 }
 export default listDiff;
