@@ -120,5 +120,53 @@ describe('test list diff algorithm', () => {
     expect(diffs.moves.length).toEqual(4);
     applyMoves(oldList, diffs.moves);
     asssertEquals(oldList, newList);
-  })
+  });
+
+  test('Reorder and delete elements', () => {
+    const oldList = [
+      {id: 'a'},
+      {id: 'b'},
+      {id: 'c'},
+      {id: 'd'},
+      {id: 'e'},
+      {id: 'f'},
+    ];
+
+    const newList = [
+      {id: 'b'},
+      {id: 'c'},
+      {id: 'f'},
+      {id: 'e'},
+      {id: 'd'}
+    ];
+
+    const diffs = listDiff(oldList, newList, 'id');
+    expect(diffs.moves.length).toEqual(5);
+    applyMoves(oldList, diffs.moves);
+    asssertEquals(oldList, newList);
+  });
+
+  test('Use function as identify', () => {
+    const oldList = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+    ];
+
+    const newList = [
+      'b',
+      'c',
+      'g',
+      'e',
+      'a',
+      'q',
+    ];
+
+    const diffs = listDiff(oldList, newList, key => key);
+    applyMoves(oldList, diffs.moves);
+    asssertEquals(oldList, newList);
+  });
 })
