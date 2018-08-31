@@ -5,10 +5,10 @@ function diffProps(oldNode, newNode) {
   let count = 0;
   const oldProps = oldNode.props;
   const newProps = newNode.props;
-  const propsPatches = { };
+  const propsPatches = {};
 
   // get diff props out
-  for(let key in oldProps) {
+  for (let key in oldProps) {
     const value = oldProps[key];
     if (newProps.hasOwnProperty(key) && newProps[key] !== value) {
       count += 1;
@@ -21,7 +21,7 @@ function diffProps(oldNode, newNode) {
     const value = newProps[key];
     if (!oldProps.hasOwnProperty(key)) {
       count += 1;
-      propsPatches[key] = newProps[key];
+      propsPatches[key] = value;
     }
   }
   if (count === 0) {
@@ -37,20 +37,20 @@ function dfsWalk(oldNode, newNode, index, patches) {
   let actualNewNode = _.isArray(newNode) ? newNode[index] : newNode;
   const currentPatch = [];
 
-  if(actualNewNode === null) {
+  if (actualNewNode === null) {
     // do nothing
-  } else if(_.isString(actualOldNode) && _.isString(actualOldNode)) {
-    if(actualNewNode !== actualOldNode) {
+  } else if (_.isString(actualOldNode) && _.isString(actualNewNode)) {
+    if (actualNewNode !== actualOldNode) {
       currentPatch.push({
         type: moveAction.TEXT,
         content: newNode
       });
-    } else if(
+    } else if (
       actualNewNode.tagName === actualOldNode.tagName &&
       actualNewNode.key === actualOldNode.key
-    ){
-      const propsPathch = diffProps(actualOldNode, actualNewNode);
-      if (propsPathch) {
+    ) {
+      const propsPatch = diffProps(actualOldNode, actualNewNode);
+      if (propsPatch) {
         currentPatch.push({
           type: moveAction.PROPS,
           content: newNode
